@@ -1,20 +1,16 @@
 import os
 
 from celery import Celery
-from flask import Flask, request, redirect, render_template, url_for
+from flask import Flask, request, redirect, render_template, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask.ext.login import login_required
 
 from seq2seq.execute import give_suggestion
+from models import Email
 
 SETTINGS = {}
 ROWS_PER_PAGE = 10
-
-
-class Email:
-    pass
-
 
 app = Flask(__name__)
 
@@ -27,7 +23,7 @@ app.config["MAIL_USE_SSL"] = True
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-postgre = SQLAlchemy(app)
+db = SQLAlchemy(app)
 mail = Mail(app)
 
 celery = Celery(
@@ -48,8 +44,13 @@ def send_email_async(recipients, subject, body):
 def index():
     return render_template("index.html")
 
+@app.route("/sign-in")
+def sign_in():
+    return 
+
 
 @app.route("/predict", methods=["POST"])
+@login_required
 def predict():
     to_predict = request.form.to_dict()
     prediction = give_suggestion(to_predict["intial_text"])
