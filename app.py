@@ -9,18 +9,13 @@ from flask.ext.login import login_required
 from seq2seq.execute import give_suggestion
 from models import Email
 
-SETTINGS = {}
-ROWS_PER_PAGE = 10
+# The number of emails per page
+EMAILS_PER_PAGE = 10
 
 app = Flask(__name__)
 
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 465
-app.config["MAIL_USERNAME"] = "yourId@gmail.com"
-app.config["MAIL_PASSWORD"] = "*****"
 app.config["MAIL_USE_TLS"] = False
 app.config["MAIL_USE_SSL"] = True
-
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -44,9 +39,17 @@ def send_email_async(recipients, subject, body):
 def index():
     return render_template("index.html")
 
-@app.route("/sign-in")
+
+@app.route("/login")
 def sign_in():
-    return 
+    form = request.form.to_dict()
+    if form["MAIL_SERVER"]:
+        app.config["MAIL_SERVER"] = form["MAIL_SERVER"]
+        app.config["MAIL_PORT"] = form["MAIL_SERVER"]
+        app.config["MAIL_USERNAME"] = form["MAIL_SERVER"]
+        app.config["MAIL_PASSWORD"] = form["MAIL_SERVER"]
+
+    return render_template("index/index.html")
 
 
 @app.route("/predict", methods=["POST"])
@@ -63,7 +66,7 @@ def predict():
 def get_emails():
     # Get paginated emails
     page = request.args.get("page", 1, type=int)
-    emails = Email.query.paginate(page=page, per_page=ROWS_PER_PAGE)
+    emails = Email.query.paginate(page=page, per_page=EMAILS_PER_PAGE)
 
     return render_template("emails/index.html", emails=emails)
 
@@ -81,7 +84,13 @@ def send_email():
     return redirect(url_for("index"))
 
 
+@app.route("/search_email", methods=["POST"])
+@login_required
+def search_email():
+    query = request.form.get("query")
+    matched_emails = Email.model.query.filter_by(query).all()
+    return render_template("emails/index.html", emails=matched_emails)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
-
-# TODO: search emails
