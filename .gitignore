@@ -27,6 +27,12 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+seq2seq/legacy/*
+seq2seq/enron.csv
+seq2seq/out/model_weights/*
+seq2seq/out/enron_processed.csv
+seq2seq/out/train.pickle
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.

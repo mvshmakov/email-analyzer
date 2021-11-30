@@ -1,0 +1,155 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Email Analyzer</title>
+  <meta name="description" content="Analyze emails with the style">
+  <meta name="author" content="Maxim Shmakov <mvshmakov@mail.ru>">
+  <link href="https://fonts.googleapis.com/css?family=Geneva&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body {
+      height: 100%;
+      width: 100%;
+      background: white;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrapper {
+      width: 40%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .heading {
+      text-align: center;
+      letter-spacing: 0.4px;
+
+      color: #7F63F4;
+    }
+
+    .help_message {
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.32px;
+      color: #6A707E;
+
+      margin-bottom: 30px;
+    }
+
+    .configuration_container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+    .configuration_header {
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0.32px;
+
+      color: #6A707E;
+      text-align: center;
+    }
+
+    .configuration_section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input {
+      border-width: 0px;
+      border: none;
+      outline: none;
+
+      font-size: 14px;
+      line-height: 54px;
+      letter-spacing: 0.28px;
+    }
+
+    .line {
+      width: 100%;
+      height: 2px;
+
+      background: #DDDFE1;
+    }
+
+    .button {
+      width: 416px;
+      height: 54px;
+
+      color: #FFFFFF;
+      background: #7F63F4;
+      border-radius: 7px;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <h1 class="heading">Welcome to the email analyzer!</h1>
+
+    <span class="help_message">
+      To start, please, enter IMAP/SMTP credentials of the
+      email inbox
+    </span>
+
+    <form class="form">
+      <div class="configuration_container">
+        <section class="configuration_section">
+          <span class="configuration_header">IMAP Inbox</span>
+
+          <input placeholder="Email address" class="input" type="email" />
+          <div class="line"></div>
+
+          <input placeholder="Password" class="input" type="password" />
+          <div class="line"></div>
+
+          <input placeholder="Server address" class="input" />
+          <div class="line"></div>
+
+          <input placeholder="Port" class="input" />
+          <div class="line"></div>
+        </section>
+
+        <section class="configuration_section">
+          <span class="configuration_header">SMTP Outbox</span>
+
+          <input placeholder="Email address" class="input" type="email" />
+          <div class="line"></div>
+
+          <input placeholder="Password" class="input" type="password" />
+          <div class="line"></div>
+
+          <input placeholder="Server address" class="input" />
+          <div class="line"></div>
+
+          <input placeholder="Port" class="input" />
+          <div class="line"></div>
+        </section>
+      </div>
+
+      <button class="button">Log In</button>
+    </form>
+  </div>
+</body>
+
+</html>

@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask.ext.login import login_required
 
+from seq2seq.execute import give_suggestion
+
 SETTINGS = {}
 ROWS_PER_PAGE = 10
 
@@ -16,12 +18,21 @@ class Email:
 
 app = Flask(__name__)
 
-app.config.from_object(os.environ["APP_SETTINGS"])
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 465
+app.config["MAIL_USERNAME"] = "yourId@gmail.com"
+app.config["MAIL_PASSWORD"] = "*****"
+app.config["MAIL_USE_TLS"] = False
+app.config["MAIL_USE_SSL"] = True
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 postgre = SQLAlchemy(app)
+mail = Mail(app)
 
 celery = Celery(
-    "main_app", broker=os.environ["CELERY_BROKER"],
+    "main_app",
+    broker=os.environ["CELERY_BROKER"],
     backend=os.environ["CELERY_BACKEND"],
 )
 celery.conf.update(app.config)
@@ -31,6 +42,19 @@ celery.conf.update(app.config)
 def send_email_async(recipients, subject, body):
     email = Email(recipients=recipients, subject=subject, body=body)
     return Mail.send(email)
+
+
+@app.route("/index")
+def index():
+    return render_template("index.html")
+
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    to_predict = request.form.to_dict()
+    prediction = give_suggestion(to_predict["intial_text"])
+    # jsonify(request.json) request.get_json(force=True)
+    return jsonify({"suggestion": prediction})
 
 
 @app.route("/get_emails", methods=["GET"])
@@ -58,3 +82,5 @@ def send_email():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# TODO: search emails
